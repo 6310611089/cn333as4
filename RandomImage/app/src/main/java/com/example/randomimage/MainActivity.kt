@@ -126,7 +126,7 @@ fun RandomImage(
 fun ShowImage(
     uiState: UiState,
 ){
-    var src = "https://api.lorem.space/image/${uiState.selectedCategory.endpoint}?w=${uiState.width}&h=${uiState.height}"
+    var src = "https://loremflickr.com/${uiState.width}/${uiState.height}"
     Text(text = src)
     AsyncImage(
         //model = "https://ichef.bbci.co.uk/news/999/cpsprodpb/15951/production/_117310488_16.jpg",
