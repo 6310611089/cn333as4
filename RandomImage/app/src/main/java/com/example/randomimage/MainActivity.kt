@@ -3,13 +3,14 @@ package com.example.randomimage
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.randomimage.ui.theme.RandomImageTheme
 
 class MainActivity : ComponentActivity() {
@@ -22,7 +23,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    RandomImage()
+                    RandomImageScreen()
                 }
             }
         }
@@ -42,9 +43,10 @@ enum class ImageCategory(val endpoint: String) {
 }
 
 @Composable
-fun RandomImage() {
-    var width by remember { mutableStateOf("150") }
-    var height by remember { mutableStateOf("220") }
+fun RandomImageScreen() {
+
+    var width by remember { mutableStateOf("500") }
+    var height by remember { mutableStateOf("500") }
     var selectedCategory by remember { mutableStateOf(ImageCategory.MOVIE) }
 
     Column(modifier = Modifier.padding(16.dp)) {
@@ -74,11 +76,19 @@ fun RandomImage() {
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        val imageUrl = "https://api.lorem.space/image/${selectedCategory.endpoint}?w=$width&h=$height"
-        Image(
-            painter = rememberAsyncImagePainter(imageUrl),
-            contentDescription = "Random image",
-            modifier = Modifier.fillMaxWidth()
+
+        val src = "https://api.lorem.space/image/${selectedCategory.endpoint}?w=$width&h=$height"
+
+        AsyncImage(
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(src)
+                .crossfade(true)
+                .build(),
+            contentDescription = "",
+//            contentScale = ContentScale.Crop,
+//            modifier = Modifier
+//                .height(419.dp)
+//                .width(210.dp)
         )
     }
 }
