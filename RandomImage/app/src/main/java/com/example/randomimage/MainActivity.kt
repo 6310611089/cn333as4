@@ -9,11 +9,15 @@ import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -39,7 +43,7 @@ class MainActivity : ComponentActivity() {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
+                    color = Color(0xFFFFC0CB)
                 ) {
                     RandomImageScreen()
                 }
@@ -83,11 +87,13 @@ fun RandomImage(
     var ctg by remember { mutableStateOf(selectedCategory.name.lowercase()) }
 
     Column(modifier = Modifier.padding(16.dp)) {
-        Text("Input image size:", modifier = Modifier.padding(16.dp))
+        Text(stringResource(R.string.image_size),
+            fontSize = 24.sp,
+            modifier = Modifier.padding(16.dp))
         OutlinedTextField(
             value = width,
             onValueChange = { width = it },
-            label = { Text("Width") },
+            label = { Text(stringResource(R.string.input_width)) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -96,13 +102,22 @@ fun RandomImage(
         )
         if (width.isBlank()){
             Text(stringResource(R.string.warn))
+        } else {
+            if (width.isDigitsOnly()){
+                val width_ = width.toInt()
+                if (width_ <= 0){
+                    Text(stringResource(R.string.invalid))
+                }
+            } else {
+                Text(stringResource(R.string.invalid))
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
         OutlinedTextField(
             value = height,
             onValueChange = { height = it },
-            label = { Text("Height") },
+            label = { Text(stringResource(R.string.input_height)) },
             modifier = Modifier.fillMaxWidth(),
             keyboardOptions = KeyboardOptions(
                 keyboardType = KeyboardType.Number,
@@ -111,9 +126,21 @@ fun RandomImage(
         )
         if (height.isBlank()){
             Text(stringResource(R.string.warn))
+        } else {
+            if (height.isDigitsOnly()){
+                val height_ = height.toInt()
+                if (height_ <= 0){
+                    Text(stringResource(R.string.invalid))
+                }
+            } else {
+                Text(stringResource(R.string.invalid))
+            }
         }
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Select image category:", modifier = Modifier.padding(16.dp))
+        Text(stringResource(R.string.select_category),
+            fontSize = 24.sp,
+            modifier = Modifier.padding(16.dp))
         Column(modifier = Modifier.padding(0.dp)) {
             ImageCategory.values().forEach { category ->
                 Row(modifier = Modifier.padding(0.dp),
@@ -127,10 +154,10 @@ fun RandomImage(
                         if (selectedCategory.name == "OTHER"){
                             if (category.name == "OTHER"){
                                 OutlinedTextField(
-                                value = ctg,
-                                onValueChange = {ctg = it},
-                                label = { Text("Category") },
-                                modifier = Modifier.fillMaxWidth(),
+                                    value = ctg,
+                                    onValueChange = {ctg = it},
+                                    label = { Text(stringResource(R.string.input_category)) },
+                                    modifier = Modifier.fillMaxWidth(),
                                 )
                                 if (ctg.isBlank()){
                                     Text(stringResource(R.string.warn))
@@ -145,20 +172,28 @@ fun RandomImage(
             }
         }
         Spacer(modifier = Modifier.height(16.dp))
-        if (width.isNotBlank() and height.isNotBlank() and ctg.isNotBlank()) {
+        if (width.isNotBlank() and width.isDigitsOnly() and height.isNotBlank() and height.isDigitsOnly() and ctg.isNotBlank()) {
             val imWidth = width.toInt()
             val imHeight = height.toInt()
             imageViewModel.searchImage(ctg,imWidth,imHeight)
-            Button(onClick = {
-                navController.navigate(Screen.Image.name)
-            }) {
-                Text(text = "show image")
+            Box(
+                modifier = Modifier.fillMaxSize()
+            ){
+                Button(
+                    onClick = { navController.navigate(Screen.Image.name) },
+                    modifier = Modifier.align(Alignment.Center),
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
+                ){
+                    Text(
+                        text = stringResource(R.string.show_image),
+                        style = TextStyle(fontSize = 20.sp),
+                        color = Color.White
+                    )
+                }
             }
         }
     }
 }
-
-
 
 @Composable
 fun ShowImage(
@@ -169,23 +204,28 @@ fun ShowImage(
     Column(modifier = Modifier.fillMaxSize(),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally) {
-        Text(text = "Here is the result.")
+        Text(
+            text = stringResource(R.string.result),
+            style = TextStyle(fontSize = 26.sp)
+        )
+        Spacer(modifier = Modifier.height(25.dp))
         AsyncImage(
-            //model = "https://ichef.bbci.co.uk/news/999/cpsprodpb/15951/production/_117310488_16.jpg",
-            //model = "https://api.lorem.space/image/car?w=150&h=150",
             model = ImageRequest.Builder(LocalContext.current)
                 .data(src)
                 .crossfade(true)
                 .build(),
             contentDescription = "",
-//            contentScale = ContentScale.Crop,
-//            modifier = Modifier
-//                .height(419.dp)
-//                .width(210.dp)
         )
-        Button(onClick = onClick) {
-            Text(text = "Go back")
+        Spacer(modifier = Modifier.height(25.dp))
+        Button(
+            onClick = onClick,
+            colors = ButtonDefaults.buttonColors(backgroundColor = Color.Black)
+        ){
+            Text(
+                text = stringResource(R.string.go_back),
+                style = TextStyle(fontSize = 20.sp),
+                color = Color.White
+            )
         }
     }
-
 }

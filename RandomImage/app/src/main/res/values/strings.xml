@@ -1,4 +1,13 @@
 <resources>
     <string name="app_name">Random Image</string>
     <string name="warn">Require!</string>
+    <string name="invalid">Invalid input!</string>
+    <string name="image_size">Input image size:</string>
+    <string name="input_width">Width</string>
+    <string name="input_height">Height</string>
+    <string name="select_category">Select image category:</string>
+    <string name="input_category">Category</string>
+    <string name="show_image">Show Image</string>
+    <string name="result">Here is the result!</string>
+    <string name="go_back">Go Back</string>
 </resources>
