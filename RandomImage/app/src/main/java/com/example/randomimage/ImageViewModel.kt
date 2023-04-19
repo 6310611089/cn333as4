@@ -11,7 +11,7 @@ class ImageViewModel : ViewModel() {
     private val _uiState = MutableStateFlow(UiState())
     val uiState: StateFlow<UiState> = _uiState.asStateFlow()
 
-    fun searchImage(selectedCategory: ImageCategory, width: Int, height: Int){
+    fun searchImage(selectedCategory: String, width: Int, height: Int){
         _uiState.update { currentState -> currentState.copy(
             selectedCategory = selectedCategory,
             width = width,
