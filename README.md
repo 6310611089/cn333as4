@@ -1,6 +1,6 @@
 # cn333as4
 **วิธีการติตตั้ง**
-1. git clone git@github.com:6310611089/cn333as4.git
+1. git clone https://github.com/6310611089/cn333as4.git
 2. ในโฟลเดอร์ที่ Clone มา เปิด Project ที่มีชื่อว่า Random Image ใน Android Studio
 3. ทำการ Create Device เลือก Phone -> Pixel 6 -> Tiramisu -> Finish
 3. Run App(Shift+F10)
